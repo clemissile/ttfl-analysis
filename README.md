@@ -13,9 +13,6 @@
 <br />
 
 <div align="center">
-	<a href="https://github.com/clemissile/ttfl-analysis">
-		<img src="https://camo.githubusercontent.com/5f54c0817521724a2deae8dedf0c280a589fd0aa9bffd7f19fa6254bb52e996a/68747470733a2f2f6e6573746a732e636f6d2f696d672f6c6f676f2d736d616c6c2e737667" alt="Logo" width="80" height="80">
-	</a>
 	<h3 align="center">TTFL Player Analysis</h3>
 	<p align="center">
 		<br />
