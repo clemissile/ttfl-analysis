@@ -3,8 +3,8 @@ from nba_api.stats.endpoints import playergamelog
 import pandas as pd
 
 # Define player ID and season
-player = players.find_players_by_full_name('julius randle')
-player_id = player[0]['id']  # LeBron James
+player = players.find_players_by_full_name('lebron james')
+player_id = player[0]['id']
 season = '2024-25'  # Update to the current season in 'YYYY-YY' format
 
 # Fetch the game log for the player
