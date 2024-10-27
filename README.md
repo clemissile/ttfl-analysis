@@ -13,7 +13,7 @@
 <br />
 
 <div align="center">
-	<h3 align="center">TTFL Player Analysis</h3>
+	<h3 align="center">TrashTalk Fantasy League Player Analysis</h3>
 	<p align="center">
 		<br />
 		<a href="https://github.com/clemissile/ttfl-analysis/issues">Report Bug</a>
@@ -65,13 +65,13 @@ This project calculates the **Top 10 players** in today's NBA games with the hig
 ### Installation
 
 ```bash
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ### Running the script
 
 ```bash
-$ python ttfl.py
+python ttfl.py
 ```
 
 <!-- CONTRIBUTING -->
