@@ -59,9 +59,24 @@ for player_id in set(player_ids):  # Remove duplicates with set
     # Append player name and TTFL average to the list
     player_ttfl_averages.append((player_name, ttfl_average))
 
-# Sort by TTFL average in descending order and select the top 10
-top_10_ttfl_players = sorted(player_ttfl_averages, key=lambda x: x[1], reverse=True)[:10]
+# Sort by TTFL average in descending order and select the top 15
+top_15_ttfl_players = sorted(player_ttfl_averages, key=lambda x: x[1], reverse=True)[:15]
 
-# Display results
-for player, avg_ttfl in top_10_ttfl_players:
-    print(f"{player}: {avg_ttfl:.2f}")
+# Display results with a nicely formatted ranking and emojis
+print("🏆 Top 15 TTFL Players 🏆\n")
+print(f"{'Rank':<5} {'Player':<25} {'TTFL Average':>12}")
+print("━" * 45)
+
+for rank, (player, avg_ttfl) in enumerate(top_15_ttfl_players, start=1):
+    if rank == 1:
+        rank_emoji = "🥇"
+    elif rank == 2:
+        rank_emoji = "🥈"
+    elif rank == 3:
+        rank_emoji = "🥉"
+    else:
+        rank_emoji = "⭐️" 
+
+    print(f"{rank_emoji} {rank:<3} {player:<25} {avg_ttfl:>10.2f} pts")
+
+print("\n🏀 Note: TTFL Average = Total TTFL Points per game")
