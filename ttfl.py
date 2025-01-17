@@ -54,7 +54,7 @@ for player_id in set(player_ids):  # Remove duplicates with set
 
     # Get player info
     player_info = players.find_player_by_id(player_id)
-    player_name = player_info['full_name']
+    player_name = player_info['full_name'] if player_info and 'full_name' in player_info else None
 
     # Append player name and TTFL average to the list
     player_ttfl_averages.append((player_name, ttfl_average))
