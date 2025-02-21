@@ -6,8 +6,23 @@ from datetime import datetime
 # Set the current date in the format required by ScoreboardV2
 today = datetime.today().strftime('%Y-%m-%d')
 
+headers = {
+    'Host': 'stats.nba.com',
+    'Connection': 'keep-alive',
+    'Accept': 'application/json, text/plain, */*',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+    'Origin': 'https://www.nba.com',
+    'Referer': 'https://www.nba.com/',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-site',
+    'Sec-GPC': '1'
+}
+
 # Fetch today's games using ScoreboardV2
-games = ScoreboardV2(game_date=today)
+games = ScoreboardV2(game_date=today, headers=headers)
 games_data = games.get_data_frames()[1]
 
 # Collect player IDs for players in today's games
@@ -16,7 +31,7 @@ for _, game in games_data.iterrows():
     team_id = game['TEAM_ID']  # Get team ID from each row
     
     # Fetch team roster using commonteamroster endpoint
-    roster = commonteamroster.CommonTeamRoster(team_id=team_id, season='2024-25')
+    roster = commonteamroster.CommonTeamRoster(team_id=team_id, season='2024-25', headers=headers)
     roster_data = roster.get_data_frames()[0]
     
     # Add each player's ID from the roster to player_ids list
@@ -27,7 +42,7 @@ player_ttfl_averages = []
 
 # Loop through each player, calculate their TTFL average, and add to the list
 for player_id in set(player_ids):  # Remove duplicates with set
-    gamelog = playergamelog.PlayerGameLog(player_id=player_id, season='2024-25')
+    gamelog = playergamelog.PlayerGameLog(player_id=player_id, season='2024-25', headers=headers)
     gamelog_df = gamelog.get_data_frames()[0]
 
     if gamelog_df.empty:
