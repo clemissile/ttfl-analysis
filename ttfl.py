@@ -1,3 +1,5 @@
+import time
+import random
 from nba_api.stats.static import players, teams
 from nba_api.stats.endpoints import playergamelog, ScoreboardV2, commonteamroster
 import pandas as pd
@@ -40,39 +42,50 @@ for _, game in games_data.iterrows():
 # Initialize list for storing players' TTFL averages
 player_ttfl_averages = []
 
+# Function to sleep and avoid throttling
+def sleep_for_throttling():
+    time.sleep(random.uniform(0.5, 1.0))  # Random sleep to avoid detection
+
 # Loop through each player, calculate their TTFL average, and add to the list
 for player_id in set(player_ids):  # Remove duplicates with set
-    gamelog = playergamelog.PlayerGameLog(player_id=player_id, season='2024-25', headers=headers)
-    gamelog_df = gamelog.get_data_frames()[0]
+    try:
+        gamelog = playergamelog.PlayerGameLog(player_id=player_id, season='2024-25', headers=headers)
+        gamelog_df = gamelog.get_data_frames()[0]
 
-    if gamelog_df.empty:
-        continue  # Skip if no game log data
+        if gamelog_df.empty:
+            continue  # Skip if no game log data
 
-    # Calculate TTFL for each game
-    gamelog_df['TTFL'] = (
-        gamelog_df['PTS'] +
-        gamelog_df['REB'] +
-        gamelog_df['AST'] +
-        gamelog_df['STL'] +
-        gamelog_df['BLK'] +
-        gamelog_df['FGM'] +
-        gamelog_df['FG3M'] +
-        gamelog_df['FTM'] -
-        (gamelog_df['TOV'] +
-         (gamelog_df['FGA'] - gamelog_df['FGM']) +
-         (gamelog_df['FG3A'] - gamelog_df['FG3M']) +
-         (gamelog_df['FTA'] - gamelog_df['FTM']))
-    )
+        # Calculate TTFL for each game
+        gamelog_df['TTFL'] = (
+            gamelog_df['PTS'] +
+            gamelog_df['REB'] +
+            gamelog_df['AST'] +
+            gamelog_df['STL'] +
+            gamelog_df['BLK'] +
+            gamelog_df['FGM'] +
+            gamelog_df['FG3M'] +
+            gamelog_df['FTM'] -
+            (gamelog_df['TOV'] +
+             (gamelog_df['FGA'] - gamelog_df['FGM']) +
+             (gamelog_df['FG3A'] - gamelog_df['FG3M']) +
+             (gamelog_df['FTA'] - gamelog_df['FTM']))
+        )
 
-    # Calculate TTFL average for the player
-    ttfl_average = gamelog_df['TTFL'].mean()
+        # Calculate TTFL average for the player
+        ttfl_average = gamelog_df['TTFL'].mean()
 
-    # Get player info
-    player_info = players.find_player_by_id(player_id)
-    player_name = player_info['full_name'] if player_info and 'full_name' in player_info else None
+        # Get player info
+        player_info = players.find_player_by_id(player_id)
+        player_name = player_info['full_name'] if player_info and 'full_name' in player_info else None
 
-    # Append player name and TTFL average to the list
-    player_ttfl_averages.append((player_name, ttfl_average))
+        # Append player name and TTFL average to the list
+        player_ttfl_averages.append((player_name, ttfl_average))
+        
+        sleep_for_throttling()  # Sleep to avoid throttling after each request
+
+    except Exception as e:
+        print(f"Error processing player {player_id}: {e}")
+        continue  # Skip the player if there's an error
 
 # Sort by TTFL average in descending order and select the top 15
 top_15_ttfl_players = sorted(player_ttfl_averages, key=lambda x: x[1], reverse=True)[:15]
